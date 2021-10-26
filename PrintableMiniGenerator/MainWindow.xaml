@@ -56,9 +56,20 @@
                             <Button Content="Add" Margin="10 20 10 0"/>
                         </StackPanel>
                         <Grid>
-                            <ScrollViewer Margin="0 10 10 10">
-                                <ListView ItemsSource="{Binding Path=FilteredMonsterList, Converter={StaticResource MonsterToStringConverter}, Mode=OneWay}"/>
-                            </ScrollViewer>
+                            <ListView Margin="0 10 10 10" ItemsSource="{Binding Path=FilteredMonsterList, Mode=OneWay}" HorizontalContentAlignment="Stretch">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path=Name}">
+                                            <TextBlock.ToolTip>
+                                                <StackPanel Orientation="Vertical">
+                                                    <Image Width="200" Height="300" Source="{Binding Path=ImagePath}"/>
+                                                    <Label Content="{Binding Path=Size}" HorizontalAlignment="Center"/>
+                                                </StackPanel>
+                                            </TextBlock.ToolTip>
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
                             <Image Panel.ZIndex="1" Source="/Resources/spinner_icon.png"
                            Width="70" Height="70" RenderTransformOrigin="0.5, 0.5"
                            Visibility="{Binding Path=IsLoaded, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">

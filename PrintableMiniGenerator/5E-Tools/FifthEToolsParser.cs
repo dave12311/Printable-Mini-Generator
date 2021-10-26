@@ -14,7 +14,7 @@ namespace PrintableMiniGenerator
         private static readonly HttpClient _httpClient = new();
         private readonly List<Monster> _monsters = new();
 
-        public List<Monster> FilteredMonsterList { get; private set; } = new();
+        public ObservableCollection<Monster> FilteredMonsterList { get; private set; } = new();
 
         private bool _isLoaded;
         public bool IsLoaded
@@ -43,7 +43,7 @@ namespace PrintableMiniGenerator
         {
             _ = Task.Run(() =>
             {
-                FilteredMonsterList = _monsters.FindAll(f => { return f.Name.ToLowerInvariant().Contains(filter.ToLowerInvariant()); });
+                FilteredMonsterList = new(_monsters.FindAll(f => { return f.Name.ToLowerInvariant().Contains(filter.ToLowerInvariant()); }));
                 NotifyPropertyChanged(nameof(FilteredMonsterList));
             });
         }
