@@ -12,9 +12,12 @@ namespace PrintableMiniGenerator
         public MainWindow()
         {
             InitializeComponent();
-            List<MiniListItem> miniListItems = new();
-            miniListItems.Add(new MiniListItem { Count = 2 });
-            //MiniList.ItemsSource = miniListItems;
+            DataContext = FEToolsParser;
+        }
+
+        private void MonsterNameFilter_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            FEToolsParser.FilterMonsterListAsync(((System.Windows.Controls.TextBox)e.Source).Text);
         }
     }
 

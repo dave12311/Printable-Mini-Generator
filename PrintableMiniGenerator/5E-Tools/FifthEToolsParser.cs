@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Collections.Generic;
 using System;
 using System.ComponentModel;
+using System.Collections.ObjectModel;
 
 namespace PrintableMiniGenerator
 {
@@ -13,16 +14,7 @@ namespace PrintableMiniGenerator
         private static readonly HttpClient _httpClient = new();
         private readonly List<Monster> _monsters = new();
 
-        private List<Monster> _filteredMonsterList;
-        public List<Monster> FilteredMonsterList
-        {
-            get => _filteredMonsterList;
-            set
-            {
-                _filteredMonsterList = value;
-                NotifyPropertyChanged(nameof(FilteredMonsterList));
-            }
-        }
+        public List<Monster> FilteredMonsterList { get; private set; } = new();
 
         private bool _isLoaded;
         public bool IsLoaded
@@ -47,9 +39,13 @@ namespace PrintableMiniGenerator
             Initialize();
         }
 
-        public void FilterMonsterList(string filter)
+        public void FilterMonsterListAsync(string filter)
         {
-            FilteredMonsterList = _monsters.FindAll(f => { return f.Name.Contains(filter.ToLowerInvariant()); });
+            _ = Task.Run(() =>
+            {
+                FilteredMonsterList = _monsters.FindAll(f => { return f.Name.ToLowerInvariant().Contains(filter.ToLowerInvariant()); });
+                NotifyPropertyChanged(nameof(FilteredMonsterList));
+            });
         }
 
         private async void Initialize()
@@ -67,7 +63,7 @@ namespace PrintableMiniGenerator
 
             Monster.ResolveDependentMonsters(_monsters);
             Monster.RemoveNoImageMonsters(_monsters);
-            FilterMonsterList("");
+            FilterMonsterListAsync("");
 
             IsLoaded = true;
         }
